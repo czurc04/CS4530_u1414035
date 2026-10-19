@@ -21,7 +21,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.assignment2.ui.CourseListScreen.AddCourseScreen
 import com.example.assignment2.ui.CourseListScreen.CourseListScreen
 import com.example.assignment2.ui.theme.Assignment2Theme
+import com.example.assignment2.viewmodel.AppViewModelProvider
 import com.example.assignment2.viewmodel.CourseViewModel
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import com.example.assignment2.ui.CourseListScreen.CourseDetailScreen
 import com.example.assignment2.model.Course
@@ -38,7 +40,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             Assignment2Theme {
-                val viewModel: CourseViewModel = viewModel()
+                val viewModel: CourseViewModel = viewModel(factory = AppViewModelProvider.Factory)
+                val courses by viewModel.courses.collectAsState()
                 // tracks whether "add course" page should be shown
                 var showAddScreen by remember { mutableStateOf(false) }
                 // tracks which course the user tapped into
@@ -81,7 +84,7 @@ class MainActivity : ComponentActivity() {
                                 ) { Text("Add Course") }
 
                                 CourseListScreen(
-                                    courses = viewModel.courses,
+                                    courses = courses,
                                     onCourseClick = { course -> selectedCourse = course }
                                 )
                             }
